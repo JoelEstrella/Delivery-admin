@@ -15,7 +15,7 @@
     <link href="{{ asset('css/admin.css') }}" rel="stylesheet">
     @stack('styles')
 </head>
-<body class="admin-app">
+<body class="admin-app" ng-app="deliveryAdminApp">
 @php
     $currentUser = auth()->user();
     if ($currentUser) {
@@ -49,7 +49,7 @@
 <script src="{{ asset('js/app/controllers/role.controller.js') }}"></script>
 <script src="{{ asset('js/app/controllers/delivery.controller.js') }}"></script>
 <script src="https://unpkg.com/feather-icons"></script>
-<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js"></script>
+<!-- <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js"></script> -->
 <script src="{{ asset('js/admin.js') }}"></script>
 @stack('scripts')
 </body>

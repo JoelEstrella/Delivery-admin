@@ -25,17 +25,19 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        $users = $this->users->paginate($request->get('search'));
+        $users = User::with('role')->orderBy('name')->get();
+        $roles = Role::orderBy('name')->get(['id', 'name']);
 
-        return view('admin.shared.index', [
+        if ($request->expectsJson()) {
+            return response()->json([
+                'users' => $users,
+                'roles' => $roles,
+            ]);
+        }
+
+        return view('admin.users.index', [
             'title' => 'Usuarios',
             'subtitle' => 'Administración de accesos del sistema',
-            'createRoute' => route('admin.users.create'),
-            'search' => $request->get('search'),
-            'records' => $users,
-            'columns' => $this->indexColumns(),
-            'resource' => 'admin.users',
-            'actions' => ['show', 'edit', 'delete'],
         ]);
     }
 
@@ -55,7 +57,14 @@ class UserController extends Controller
 
     public function store(UserRequest $request)
     {
-        $this->users->create($request->validated());
+        $user = $this->users->create($request->validated());
+
+        if ($request->expectsJson()) {
+            return response()->json([
+                'message' => 'Usuario creado correctamente.',
+                'user' => $user,
+            ], 201);
+        }
 
         return redirect()->route('admin.users.index')->with('success', 'Usuario creado correctamente.');
     }

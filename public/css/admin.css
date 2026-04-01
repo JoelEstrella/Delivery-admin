@@ -46,6 +46,10 @@ body.admin-app {
     overflow-x: hidden;
 }
 
+body.ui-modal-lock {
+    overflow: hidden;
+}
+
 body.sidebar-collapsed .admin-sidebar {
     transform: translateX(-100%);
 }
@@ -756,6 +760,98 @@ textarea.form-control:focus {
 }
 
 /* Modal */
+.ui-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: none;
+}
+
+.ui-modal.is-open {
+    display: block;
+}
+
+.ui-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(45, 40, 41, 0.62);
+    backdrop-filter: blur(6px);
+}
+
+.ui-modal__dialog {
+    position: relative;
+    width: min(1180px, calc(100vw - 1.5rem));
+    height: min(92vh, 980px);
+    margin: 1rem auto;
+    background: rgba(255, 255, 255, 0.98);
+    border: 1px solid rgba(45, 40, 41, 0.08);
+    border-radius: 1.4rem;
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.ui-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.15rem;
+    border-bottom: 1px solid rgba(45, 40, 41, 0.08);
+    background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(249,250,252,0.98) 100%);
+}
+
+.ui-modal__eyebrow {
+    font-size: .7rem;
+    font-weight: 800;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+}
+
+.ui-modal__title {
+    font-size: 1.05rem;
+    font-weight: 900;
+    color: var(--color-dark);
+    line-height: 1.15;
+}
+
+.ui-modal__body {
+    flex: 1 1 auto;
+    min-height: 0;
+    background: var(--color-bg);
+    overflow: hidden;
+    position: relative;
+}
+
+.ui-modal__content {
+    height: 100%;
+    overflow: auto;
+    padding: 1rem;
+}
+
+.ui-modal__loading {
+    position: absolute;
+    inset: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.75);
+    color: var(--color-slate);
+    font-weight: 700;
+}
+
+.ui-modal.is-open .ui-modal__dialog {
+    animation: uiModalIn .18s ease-out;
+}
+
+@keyframes uiModalIn {
+    from { transform: translateY(10px) scale(.985); opacity: .6; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
 .modal-content {
     border: 1px solid rgba(45, 40, 41, 0.08);
     border-radius: 1.25rem;

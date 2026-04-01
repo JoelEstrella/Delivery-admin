@@ -21,7 +21,7 @@
     $plantListJson = addslashes(json_encode($plantList));
 @endphp
 
-<div class="card-admin ui-card p-4 mb-4" ng-app="deliveryAdminApp" ng-controller="DeliveryFormController as vm" ng-init="vm.init()" ng-cloak>
+<div class="card-admin ui-card p-4 mb-4" ng-controller="DeliveryFormController as vm" ng-init="vm.init()" ng-cloak>
     <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center gap-2 mb-3">
         <div>
             <h5 class="mb-1">Detalle de entrega</h5>

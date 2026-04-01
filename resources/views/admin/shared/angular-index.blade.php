@@ -11,7 +11,7 @@
     $bootJson = htmlspecialchars(json_encode($boot, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES), ENT_QUOTES, 'UTF-8');
 @endphp
 
-<div class="card-admin ui-card p-4 mb-4" ng-app="deliveryAdminApp" ng-controller="CctController as vm" ng-cloak ng-init="vm.init('admin-ccts-bootstrap')">
+<div class="card-admin ui-card p-4 mb-4" ng-controller="CctController as vm" ng-cloak ng-init="vm.init('admin-ccts-bootstrap')">
     <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center gap-3">
         <div>
             <div class="ui-page-title">{{ $title }}</div>

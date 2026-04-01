@@ -21,13 +21,13 @@
     $plantListJson = addslashes(json_encode($plantList));
 @endphp
 
-<div class="card-admin p-4 mb-4" ng-app="deliveryAdminApp" ng-controller="DeliveryFormController as vm" ng-init="vm.init()" ng-cloak>
+<div class="card-admin ui-card p-4 mb-4" ng-app="deliveryAdminApp" ng-controller="DeliveryFormController as vm" ng-init="vm.init()" ng-cloak>
     <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center gap-2 mb-3">
         <div>
             <h5 class="mb-1">Detalle de entrega</h5>
-            <div class="text-muted small">Agrega una o más plantas a la entrega.</div>
+            <div class="text-muted-soft small">Agrega una o más plantas a la entrega.</div>
         </div>
-        <button type="button" class="btn btn-outline-berry btn-sm" ng-click="vm.addItem()">Agregar planta</button>
+        <button type="button" class="ui-btn ui-btn--ghost ui-btn--sm" ng-click="vm.addItem()">Agregar planta</button>
     </div>
 
     @push('scripts')
@@ -40,12 +40,12 @@
     @endpush
 
     <div class="table-responsive">
-        <table class="table table-hover align-middle table-admin">
+        <table class="table table-hover align-middle ui-table table-admin">
             <thead>
                 <tr>
                     <th>Planta</th>
-                    <th style="width: 160px;">Cantidad</th>
-                    <th style="width: 90px;"></th>
+                    <th class="table-col-quantity">Cantidad</th>
+                    <th class="table-col-actions"></th>
                 </tr>
             </thead>
             <tbody>
@@ -60,7 +60,7 @@
                         <input type="number" min="1" class="form-control" ng-model="item.quantity" name="quantities[]" required>
                     </td>
                     <td class="text-end">
-                        <button type="button" class="btn btn-outline-danger btn-sm" ng-click="vm.removeItem(item)">Quitar</button>
+                        <button type="button" class="ui-btn ui-btn--negative ui-btn--sm" ng-click="vm.removeItem(item)">Quitar</button>
                     </td>
                 </tr>
             </tbody>

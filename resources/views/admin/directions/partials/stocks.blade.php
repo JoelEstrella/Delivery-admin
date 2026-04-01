@@ -3,11 +3,11 @@
     $stocks = $direction && $direction->relationLoaded('stocks') ? $direction->stocks : collect();
 @endphp
 
-<div class="card-admin p-4 mt-4">
+<div class="card-admin ui-card p-4 mt-4">
     <h5 class="mb-3">Stock actual por planta</h5>
 
     <div class="table-responsive">
-        <table class="table table-hover align-middle table-admin mb-0">
+        <table class="table table-hover align-middle ui-table table-admin mb-0">
             <thead>
                 <tr>
                     <th>Planta</th>
@@ -22,7 +22,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="2" class="text-center text-muted py-4">No hay stock registrado para esta dirección.</td>
+                        <td colspan="2" class="text-center text-muted-soft py-4">No hay stock registrado para esta dirección.</td>
                     </tr>
                 @endforelse
             </tbody>

@@ -11,22 +11,22 @@
         $method = strtoupper($method ?? 'POST');
     @endphp
 
-    <div class="card-admin p-4 mb-4">
+    <div class="card-admin ui-card p-4 mb-4">
         <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center gap-3">
             <div>
-                <div class="page-title">{{ $title }}</div>
+                <div class="ui-page-title">{{ $title }}</div>
                 @if(!empty($subtitle))
-                    <div class="page-subtitle">{{ $subtitle }}</div>
+                    <div class="ui-page-subtitle">{{ $subtitle }}</div>
                 @endif
             </div>
             <div>
-                <a href="{{ $backRoute ?? url()->previous() }}" class="btn btn-outline-secondary">Volver</a>
+                <a href="{{ $backRoute ?? url()->previous() }}" class="ui-btn ui-btn--secondary">Volver</a>
             </div>
         </div>
     </div>
 
     @if($errors->any())
-        <div class="alert alert-danger border-0 shadow-sm">
+        <div class="ui-alert ui-alert--error">
             <div class="fw-semibold mb-2">Revisa los siguientes errores:</div>
             <ul class="mb-0 ps-3">
                 @foreach($errors->all() as $error)
@@ -43,11 +43,11 @@
         @endif
 
         @foreach($sections as $section)
-            <div class="card-admin p-4 mb-4">
+            <div class="card-admin ui-card p-4 mb-4">
                 <div class="mb-3">
                     <h5 class="mb-1">{{ $section['title'] ?? '' }}</h5>
                     @if(!empty($section['description']))
-                        <div class="text-muted small">{{ $section['description'] }}</div>
+                        <div class="text-muted-soft small">{{ $section['description'] }}</div>
                     @endif
                 </div>
 
@@ -135,7 +135,7 @@
                             @enderror
 
                             @if($help)
-                                <div class="text-muted small mt-1">{{ $help }}</div>
+                                <div class="text-muted-soft small mt-1">{{ $help }}</div>
                             @endif
                         </div>
                     @endforeach
@@ -147,9 +147,9 @@
             @include($extraView, $extraData)
         @endif
 
-        <div class="card-admin p-4 d-flex justify-content-between align-items-center">
-            <a href="{{ $backRoute ?? url()->previous() }}" class="btn btn-outline-secondary">Cancelar</a>
-            <button type="submit" class="btn btn-primary px-4">{{ $submitLabel ?? 'Guardar' }}</button>
+        <div class="card-admin ui-card p-4 d-flex justify-content-between align-items-center gap-2">
+            <a href="{{ $backRoute ?? url()->previous() }}" class="ui-btn ui-btn--secondary">Cancelar</a>
+            <button type="submit" class="ui-btn ui-btn--primary px-4">{{ $submitLabel ?? 'Guardar' }}</button>
         </div>
     </form>
 @endsection

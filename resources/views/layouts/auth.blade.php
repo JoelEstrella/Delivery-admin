@@ -16,7 +16,7 @@
 </head>
 <body class="auth-app">
 <div class="auth-stage">
-    <div class="auth-card card-admin p-4 p-md-5">
+    <div class="auth-card">
         @yield('content')
     </div>
 </div>

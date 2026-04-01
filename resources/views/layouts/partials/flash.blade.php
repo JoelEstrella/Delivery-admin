@@ -1,11 +1,11 @@
 @if(session('success'))
-    <div class="alert alert-success border-0 shadow-sm">
+    <div class="ui-alert ui-alert--success">
         {{ session('success') }}
     </div>
 @endif
 
 @if(session('error'))
-    <div class="alert alert-danger border-0 shadow-sm">
+    <div class="ui-alert ui-alert--error">
         {{ session('error') }}
     </div>
 @endif

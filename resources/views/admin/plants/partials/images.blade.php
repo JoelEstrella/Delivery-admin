@@ -3,11 +3,11 @@
     $existingImages = $plant && $plant->relationLoaded('images') ? $plant->images : collect();
 @endphp
 
-<div class="card-admin p-4 mb-4">
+<div class="card-admin ui-card p-4 mb-4">
     <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center gap-2 mb-3">
         <div>
             <h5 class="mb-1">Imágenes</h5>
-            <div class="text-muted small">Carga JPG o PNG de hasta 5 MB por imagen.</div>
+            <div class="text-muted-soft small">Carga JPG o PNG de hasta 5 MB por imagen.</div>
         </div>
     </div>
 
@@ -32,7 +32,7 @@
                         <div class="meta d-flex justify-content-between align-items-center gap-2">
                             <span class="text-truncate">{{ $image->file_name }}</span>
                             @if($image->is_primary)
-                                <span class="badge bg-berry badge-soft">Principal</span>
+                                <span class="badge bg-berry badge-soft ui-badge ui-badge--soft">Principal</span>
                             @endif
                         </div>
                     </div>

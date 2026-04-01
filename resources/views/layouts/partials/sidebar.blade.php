@@ -1,7 +1,8 @@
 <aside class="admin-sidebar p-3 p-lg-4">
     <div class="admin-brand">
-        <a href="{{ route('admin.dashboard') }}" class="admin-brand__link" aria-label="Ir al dashboard">
-            <img src="{{ asset('images/segey.png') }}" alt="Logo institucional" class="admin-brand__logo">
+        <a href="{{ route('admin.dashboard') }}" class="admin-brand__link admin-brand__link--text" aria-label="Ir al dashboard">
+            <span class="admin-brand__eyebrow">Sistema administrativo</span>
+            <span class="admin-brand__title">Panel institucional</span>
         </a>
     </div>
 

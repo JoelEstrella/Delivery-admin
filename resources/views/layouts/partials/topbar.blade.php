@@ -4,10 +4,9 @@
             <button id="sidebarToggle" class="btn btn-light border d-inline-flex align-items-center justify-content-center" type="button">
                 <i data-feather="menu" width="18" height="18"></i>
             </button>
-            <div>
-                <div class="small text-muted">Sistema administrativo</div>
-                <div class="fw-bold">Panel institucional</div>
-            </div>
+            <a href="{{ route('admin.dashboard') }}" class="admin-topbar-brand" aria-label="Ir al dashboard">
+                <img src="{{ asset('images/segey.png') }}" alt="Logo institucional" class="admin-topbar-brand__logo">
+            </a>
         </div>
 
         <div class="dropdown">

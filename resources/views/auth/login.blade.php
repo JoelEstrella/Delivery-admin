@@ -26,20 +26,12 @@
 
         <div class="mb-3">
             <label class="form-label fw-semibold">Usuario o correo</label>
-            <input type="text" name="login" value="{{ old('login') }}" class="form-control form-control-lg" placeholder="admin@admin.com o admin">
+            <input type="text" name="login" value="{{ old('login') }}" class="form-control form-control-lg" placeholder="">
         </div>
 
         <div class="mb-3">
             <label class="form-label fw-semibold">Contraseña</label>
-            <input type="password" name="password" class="form-control form-control-lg" placeholder="••••••••">
-        </div>
-
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="remember" value="1" id="remember" {{ old('remember') ? 'checked' : '' }}>
-                <label class="form-check-label" for="remember">Recordarme</label>
-            </div>
-            <a href="{{ route('password.request') }}" class="small text-decoration-none">¿Olvidaste tu contraseña?</a>
+            <input type="password" name="password" class="form-control form-control-lg" placeholder="">
         </div>
 
         <button type="submit" class="btn btn-primary btn-lg w-100">Ingresar</button>

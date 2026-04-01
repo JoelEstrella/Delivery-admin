@@ -1,5 +1,9 @@
 <aside class="admin-sidebar p-3 p-lg-4">
-    <div class="brand-placeholder mb-4">Logo institucional</div>
+    <div class="admin-brand">
+        <a href="{{ route('admin.dashboard') }}" class="admin-brand__link" aria-label="Ir al dashboard">
+            <img src="{{ asset('images/segey.png') }}" alt="Logo institucional" class="admin-brand__logo">
+        </a>
+    </div>
 
     <div class="mb-4">
         <div class="sidebar-section-label">Navegación</div>

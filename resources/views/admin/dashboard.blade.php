@@ -10,28 +10,28 @@
 
     <div class="row g-3 mb-4">
         <div class="col-12 col-md-6 col-xl-3">
-            <div class="card-admin p-4 h-100 border-start border-4" style="border-left-color: var(--blue) !important;">
+            <div class="card-admin stat-card stat-card--blue p-4 h-100">
                 <div class="text-muted small text-uppercase mb-1">Usuarios</div>
                 <div class="display-6 fw-bold mb-0">{{ $summary['users'] }}</div>
                 <div class="text-muted small">Activos: {{ $summary['active_users'] }}</div>
             </div>
         </div>
         <div class="col-12 col-md-6 col-xl-3">
-            <div class="card-admin p-4 h-100 border-start border-4" style="border-left-color: var(--berry) !important;">
+            <div class="card-admin stat-card stat-card--berry p-4 h-100">
                 <div class="text-muted small text-uppercase mb-1">CCT</div>
                 <div class="display-6 fw-bold mb-0">{{ $summary['ccts'] }}</div>
                 <div class="text-muted small">Centros registrados</div>
             </div>
         </div>
         <div class="col-12 col-md-6 col-xl-3">
-            <div class="card-admin p-4 h-100 border-start border-4" style="border-left-color: var(--green) !important;">
+            <div class="card-admin stat-card stat-card--green p-4 h-100">
                 <div class="text-muted small text-uppercase mb-1">Plantas</div>
                 <div class="display-6 fw-bold mb-0">{{ $summary['plants'] }}</div>
                 <div class="text-muted small">Stock total: {{ $summary['stock_total'] }}</div>
             </div>
         </div>
         <div class="col-12 col-md-6 col-xl-3">
-            <div class="card-admin p-4 h-100 border-start border-4" style="border-left-color: var(--gold) !important;">
+            <div class="card-admin stat-card stat-card--gold p-4 h-100">
                 <div class="text-muted small text-uppercase mb-1">Entregas pendientes</div>
                 <div class="display-6 fw-bold mb-0">{{ $summary['deliveries_pending'] }}</div>
                 <div class="text-muted small">Validaciones pendientes: {{ $summary['validations_pending'] }}</div>

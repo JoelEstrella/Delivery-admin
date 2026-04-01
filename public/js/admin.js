@@ -117,44 +117,6 @@
         });
     }
 
-    function initDeliveryForm() {
-        if (!window.angular) {
-            return;
-        }
-
-        var app;
-
-        try {
-            app = window.angular.module('deliveryAdminApp');
-        } catch (e) {
-            app = window.angular.module('deliveryAdminApp', []);
-        }
-
-        app.controller('DeliveryFormController', ['$scope', function ($scope) {
-            var data = window.deliveryFormData || {};
-            var initialItems = data.items && data.items.length ? data.items : [{ plant_id: '', quantity: 1 }];
-
-            $scope.items = window.angular.copy(initialItems);
-            $scope.plants = data.plants || [];
-
-            $scope.addItem = function () {
-                $scope.items.push({ plant_id: '', quantity: 1 });
-            };
-
-            $scope.removeItem = function (item) {
-                var index = $scope.items.indexOf(item);
-
-                if (index > -1) {
-                    $scope.items.splice(index, 1);
-                }
-
-                if (!$scope.items.length) {
-                    $scope.addItem();
-                }
-            };
-        }]);
-    }
-
     $(function () {
         initSidebarToggle();
         initDataTables();
@@ -162,6 +124,5 @@
         initFilePreview();
         initFeatherIcons();
         initRichText();
-        initDeliveryForm();
     });
 })(jQuery);

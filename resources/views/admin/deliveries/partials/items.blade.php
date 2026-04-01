@@ -21,13 +21,13 @@
     $plantListJson = addslashes(json_encode($plantList));
 @endphp
 
-<div class="card-admin p-4 mb-4" ng-app="deliveryAdminApp" ng-controller="DeliveryFormController" ng-cloak>
+<div class="card-admin p-4 mb-4" ng-app="deliveryAdminApp" ng-controller="DeliveryFormController as vm" ng-init="vm.init()" ng-cloak>
     <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center gap-2 mb-3">
         <div>
             <h5 class="mb-1">Detalle de entrega</h5>
             <div class="text-muted small">Agrega una o más plantas a la entrega.</div>
         </div>
-        <button type="button" class="btn btn-outline-berry btn-sm" ng-click="addItem()">Agregar planta</button>
+        <button type="button" class="btn btn-outline-berry btn-sm" ng-click="vm.addItem()">Agregar planta</button>
     </div>
 
     @push('scripts')
@@ -49,18 +49,18 @@
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="item in items">
+                <tr ng-repeat="item in vm.items">
                     <td>
                         <select class="form-select" ng-model="item.plant_id" name="plant_ids[]" required>
                             <option value="">Seleccione...</option>
-                            <option ng-repeat="plant in plants" ng-value="plant.id" ng-bind="plant.name"></option>
+                            <option ng-repeat="plant in vm.plants" ng-value="plant.id" ng-bind="plant.name"></option>
                         </select>
                     </td>
                     <td>
                         <input type="number" min="1" class="form-control" ng-model="item.quantity" name="quantities[]" required>
                     </td>
                     <td class="text-end">
-                        <button type="button" class="btn btn-outline-danger btn-sm" ng-click="removeItem(item)">Quitar</button>
+                        <button type="button" class="btn btn-outline-danger btn-sm" ng-click="vm.removeItem(item)">Quitar</button>
                     </td>
                 </tr>
             </tbody>

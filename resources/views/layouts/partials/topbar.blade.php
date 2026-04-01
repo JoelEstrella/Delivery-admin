@@ -12,8 +12,8 @@
 
         <div class="dropdown">
             <button class="btn btn-light border dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <span class="rounded-circle bg-dark-soft text-white d-inline-flex align-items-center justify-content-center" style="width:32px;height:32px;">
-                    <i data-feather="user" width="16" height="16"></i>
+                <span class="admin-user-avatar">
+                    <img src="{{ asset('images/user.jpg') }}" alt="Usuario" class="admin-user-avatar__img">
                 </span>
                 <span class="text-start d-none d-sm-inline">
                     <span class="d-block fw-semibold">{{ optional($currentUser)->name }}</span>

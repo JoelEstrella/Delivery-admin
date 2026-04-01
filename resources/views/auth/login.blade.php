@@ -4,7 +4,9 @@
 
 @section('content')
     <div class="auth-brand">
-        <div class="auth-logo-placeholder mb-3">Logo institucional</div>
+        <div class="admin-brand admin-brand--auth">
+            <img src="{{ asset('images/segey.png') }}" alt="Logo institucional" class="admin-brand__logo">
+        </div>
         <h1 class="h4 fw-bold mb-1">Acceso al sistema</h1>
         <p class="text-muted mb-0">Ingresa con tu usuario o correo institucional.</p>
     </div>

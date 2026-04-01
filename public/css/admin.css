@@ -26,6 +26,7 @@ body.admin-app {
     overflow-x: hidden;
 }
 
+.admin-layout,
 .admin-shell {
     min-height: 100vh;
 }
@@ -42,6 +43,29 @@ body.admin-app {
     transform: translateX(0);
     transition: transform .25s ease;
     overflow-y: auto;
+}
+
+.admin-brand {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: .5rem 0 1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.admin-brand__link {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.admin-brand__logo {
+    display: block;
+    width: auto;
+    max-width: 170px;
+    max-height: 54px;
+    object-fit: contain;
 }
 
 .admin-main {
@@ -76,9 +100,9 @@ body.sidebar-collapsed .admin-main {
     position: sticky;
     top: 0;
     z-index: 1030;
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(10px);
+    background: #ffffff;
     border-bottom: 1px solid rgba(45, 40, 41, 0.08);
+    box-shadow: 0 1px 0 rgba(45, 40, 41, 0.02);
 }
 
 .admin-content {
@@ -95,23 +119,49 @@ body.sidebar-collapsed .admin-main {
     background: var(--surface);
 }
 
+.stat-card {
+    border-left: 4px solid transparent;
+}
+
+.stat-card--blue {
+    border-left-color: var(--blue);
+}
+
+.stat-card--berry {
+    border-left-color: var(--berry);
+}
+
+.stat-card--green {
+    border-left-color: var(--green);
+}
+
+.stat-card--gold {
+    border-left-color: var(--gold);
+}
+
 .card-admin .card-header,
 .panel-soft .card-header {
     background: transparent;
     border-bottom: 1px solid rgba(45, 40, 41, 0.08);
 }
 
-.brand-placeholder {
-    border: 1px dashed rgba(255, 255, 255, 0.35);
-    border-radius: .85rem;
-    min-height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    letter-spacing: .06em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.85);
+.admin-user-avatar,
+.user-avatar-wrap {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex: 0 0 32px;
+    background: #e9ecef;
+    display: inline-block;
+}
+
+.admin-user-avatar__img,
+.user-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .sidebar-link {
@@ -191,6 +241,10 @@ body.sidebar-collapsed .admin-main {
     letter-spacing: .03em;
 }
 
+.cursor-pointer {
+    cursor: pointer;
+}
+
 .table-admin td,
 .table-admin th {
     vertical-align: middle;
@@ -207,7 +261,7 @@ body.sidebar-collapsed .admin-main {
 }
 
 .page-title {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     font-weight: 800;
     letter-spacing: -.02em;
 }
@@ -235,18 +289,18 @@ body.sidebar-collapsed .admin-main {
     margin-bottom: 1rem;
 }
 
-.auth-logo-placeholder {
-    border: 1px dashed rgba(45, 40, 41, 0.22);
-    border-radius: .9rem;
-    min-height: 64px;
+.admin-brand--auth {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--muted);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    background: rgba(255, 255, 255, 0.8);
+    margin-bottom: 1.25rem;
+    padding: 0;
+    border: 0;
+}
+
+.admin-brand--auth .admin-brand__logo {
+    max-width: 190px;
+    max-height: 64px;
 }
 
 .file-preview-grid {
@@ -276,7 +330,7 @@ body.sidebar-collapsed .admin-main {
 
 .ng-cloak,
 [ng-cloak],
-data-ng-cloak,
+[data-ng-cloak],
 .x-ng-cloak {
     display: none !important;
 }

@@ -1,6 +1,8 @@
 @extends('layouts.admin')
 
-@section('title', 'Dashboard | ' . config('app.name', 'Sistema administrativo'))
+@section('page-title', 'Dashboard')
+@section('ngApp', 'dashboard')
+@section('ngController', 'dashboard')
 
 @section('content')
     <div class="mb-4">
@@ -51,7 +53,7 @@
                 </div>
 
                 <div class="table-responsive">
-                        <table class="table table-hover align-middle ui-table table-admin mb-0">
+                    <table class="table table-hover align-middle ui-table table-admin mb-0">
                         <thead>
                             <tr>
                                 <th>Fecha</th>
@@ -72,7 +74,8 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="text-center text-muted-soft py-4">Aún no hay actividad registrada.</td>
+                                    <td colspan="5" class="text-center text-muted-soft py-4">Aún no hay actividad
+                                        registrada.</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -90,9 +93,15 @@
                     <a href="{{ route('admin.ccts.index') }}" class="ui-btn ui-btn--ghost text-start">CCT</a>
                     <a href="{{ route('admin.plants.index') }}" class="ui-btn ui-btn--ghost text-start">Plantas</a>
                     <a href="{{ route('admin.deliveries.index') }}" class="ui-btn ui-btn--ghost text-start">Entregas</a>
-                    <a href="{{ route('admin.delivery-validations.index') }}" class="ui-btn ui-btn--ghost text-start">Validaciones</a>
+                    <a href="{{ route('admin.delivery-validations.index') }}"
+                        class="ui-btn ui-btn--ghost text-start">Validaciones</a>
                 </div>
             </div>
         </div>
     </div>
 @endsection
+
+
+@push('scripts')
+    <script src="{{ asset('js/app.js') }}"></script>
+@endpush

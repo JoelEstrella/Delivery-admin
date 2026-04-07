@@ -21,7 +21,7 @@
 
     @if($currentUser && ($currentUser->hasPermission('users.view') || $currentUser->hasPermission('roles.view') || $currentUser->hasPermission('logs.view')))
         <div>
-            <div class="sidebar-section-label">Seguridad</div>
+            <div class="sidebar-section-label">SeguridadDDDD</div>
             <nav class="d-grid gap-2">
                 @if($currentUser->hasPermission('users.view'))
                     <a href="{{ route('admin.users.index') }}" class="ui-nav-link sidebar-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">

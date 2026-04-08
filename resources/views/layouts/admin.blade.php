@@ -81,7 +81,6 @@
     </script>
     @endif
 
-
     @stack('scripts')
 </body>
 

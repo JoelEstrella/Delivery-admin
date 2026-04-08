@@ -12,7 +12,7 @@
         </div>
     </div>
 
-    <div class="card-admin ui-card p-4">
+    <div class="card-admin ui-card p-4"   ng-cloak ng-init="init()">
         <div class="row g-3 mb-4">
             <div class="col-12 col-md-8 col-lg-6">
                 <label class="form-label">Buscar</label>
@@ -123,7 +123,7 @@
         </div>
     </div>
 
-    <div class="modal fade show"
+    <div class="modal fade show" ng-cloak 
         ng-if="showDetailModal"
         style="display: block; background: rgba(0,0,0,.45);"
         tabindex="-1"

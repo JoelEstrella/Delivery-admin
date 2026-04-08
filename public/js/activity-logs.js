@@ -18,6 +18,10 @@ app.controller('ActivityLogsController', ['$scope', '$http', '$timeout', functio
         from: 0,
         to: 0
     };
+    
+     $scope.init = function () {
+        $scope.fetchRecords(1);
+    };
 
     $scope.pages = [];
     var searchTimeout = null;

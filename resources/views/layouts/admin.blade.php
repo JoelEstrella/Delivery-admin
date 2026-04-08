@@ -59,17 +59,6 @@
     <script src="{{ asset('js/admin.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    @if(session('success'))
-    <script>
-        Swal.fire({
-            icon: 'success',
-            title: 'Éxito',
-            text: @json(session('success')),
-            confirmButtonColor: '#333'
-        });
-    </script>
-    @endif
-
     @if(session('error'))
     <script>
         Swal.fire({
@@ -92,16 +81,7 @@
     </script>
     @endif
 
-    @if($errors->any())
-    <script>
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            html: `{!! collect($errors->all())->map(fn($e) => '<div>'.$e.'</div>')->implode('') !!}`,
-            confirmButtonColor: '#333'
-        });
-    </script>
-    @endif
+
     @stack('scripts')
 </body>
 

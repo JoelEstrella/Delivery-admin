@@ -27,7 +27,7 @@ class RoleController extends Controller
         if ($request->expectsJson() || $request->ajax()) {
             $search = trim((string) $request->get('search'));
 
-            $roles = Role::with(['permissions:id,name,module', 'users:id'])
+            $roles = Role::with(['permissions:id,name,module', 'users:id,role_id'])
                 ->when($search, function ($query) use ($search) {
                     $query->where(function ($q) use ($search) {
                         $q->where('name', 'like', "%{$search}%")

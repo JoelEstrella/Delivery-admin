@@ -13,34 +13,50 @@ class ActivityLogController extends Controller
         $this->middleware('permission:logs.view');
     }
 
-    public function index(Request $request)
+   public function index(Request $request)
     {
-        $records = ActivityLog::with(['user.role'])
-            ->when($request->get('search'), function ($query, $search) {
+        $search = trim((string) $request->get('search'));
+
+        $query = ActivityLog::with(['user:id,name,role_id', 'user.role:id,name'])
+            ->when($search, function ($query) use ($search) {
                 $query->where(function ($inner) use ($search) {
                     $inner->where('module', 'like', '%' . $search . '%')
                         ->orWhere('action', 'like', '%' . $search . '%')
-                        ->orWhere('description', 'like', '%' . $search . '%');
+                        ->orWhere('description', 'like', '%' . $search . '%')
+                        ->orWhere('ip_address', 'like', '%' . $search . '%')
+                        ->orWhereHas('user', function ($userQuery) use ($search) {
+                            $userQuery->where('name', 'like', '%' . $search . '%');
+                        });
                 });
             })
-            ->latest()
-            ->paginate(15)
-            ->appends($request->query());
+            ->latest();
 
-        return view('admin.shared.index', [
+        if ($request->expectsJson() || $request->ajax()) {
+            $records = $query->paginate(15)->through(function ($log) {
+                return [
+                    'id' => $log->id,
+                    'created_at' => optional($log->created_at)->format('d/m/Y H:i'),
+                    'module' => $log->module,
+                    'action' => $log->action,
+                    'description' => $log->description,
+                    'record_id' => $log->record_id,
+                    'ip_address' => $log->ip_address,
+                    'user_agent' => $log->user_agent,
+                    'old_values' => $log->old_values,
+                    'new_values' => $log->new_values,
+                    'user' => [
+                        'name' => optional($log->user)->name,
+                        'role' => optional(optional($log->user)->role)->name,
+                    ],
+                ];
+            });
+
+            return response()->json($records);
+        }
+
+        return view('admin.activity-logs.index', [
             'title' => 'Bitácora',
             'subtitle' => 'Registro de acciones importantes',
-            'search' => $request->get('search'),
-            'records' => $records,
-            'columns' => [
-                ['label' => 'Fecha', 'field' => 'created_at', 'type' => 'datetime'],
-                ['label' => 'Módulo', 'field' => 'module', 'type' => 'text'],
-                ['label' => 'Acción', 'field' => 'action', 'type' => 'text'],
-                ['label' => 'Descripción', 'field' => 'description', 'type' => 'text'],
-                ['label' => 'Usuario', 'field' => 'user.name', 'type' => 'text'],
-            ],
-            'resource' => null,
-            'actions' => [],
         ]);
     }
 }

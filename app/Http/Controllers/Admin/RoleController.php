@@ -17,167 +17,197 @@ class RoleController extends Controller
     {
         $this->roles = $roles;
         $this->middleware('permission:roles.view')->only(['index', 'show']);
-        $this->middleware('permission:roles.create')->only(['create', 'store']);
-        $this->middleware('permission:roles.update')->only(['edit', 'update']);
+        $this->middleware('permission:roles.create')->only(['store']);
+        $this->middleware('permission:roles.update')->only(['update']);
         $this->middleware('permission:roles.delete')->only(['destroy']);
     }
 
     public function index(Request $request)
     {
-        $roles = $this->roles->paginate($request->get('search'));
+        if ($request->expectsJson() || $request->ajax()) {
+            $search = trim((string) $request->get('search'));
 
-        return view('admin.shared.index', [
+            $roles = Role::with(['permissions:id,name,module', 'users:id'])
+                ->when($search, function ($query) use ($search) {
+                    $query->where(function ($q) use ($search) {
+                        $q->where('name', 'like', "%{$search}%")
+                          ->orWhere('slug', 'like', "%{$search}%")
+                          ->orWhere('description', 'like', "%{$search}%");
+                    });
+                })
+                ->orderBy('name')
+                ->get();
+
+            $roles->transform(function ($role) {
+                return [
+                    'id' => $role->id,
+                    'name' => $role->name,
+                    'slug' => $role->slug,
+                    'description' => $role->description,
+                    'is_active' => (bool) $role->is_active,
+                    'permissions_count' => $role->permissions->count(),
+                    'users_count' => $role->users->count(),
+                    'permissions' => $role->permissions->map(function ($permission) {
+                        return [
+                            'id' => $permission->id,
+                            'name' => $permission->name,
+                            'module' => $permission->module,
+                            'label' => $permission->module . ' / ' . $permission->name,
+                        ];
+                    })->values(),
+                ];
+            });
+
+            $permissions = Permission::orderBy('module')
+                ->orderBy('name')
+                ->get()
+                ->map(function ($permission) {
+                    return [
+                        'id' => $permission->id,
+                        'name' => $permission->name,
+                        'module' => $permission->module,
+                        'label' => $permission->module . ' / ' . $permission->name,
+                    ];
+                })
+                ->values();
+
+            return response()->json([
+                'roles' => $roles,
+                'permissions' => $permissions,
+            ]);
+        }
+
+        return view('admin.roles.index', [
             'title' => 'Roles',
             'subtitle' => 'Administración de perfiles y permisos',
-            'createRoute' => route('admin.roles.create'),
-            'search' => $request->get('search'),
-            'records' => $roles,
-            'columns' => $this->indexColumns(),
-            'resource' => 'admin.roles',
-            'actions' => ['show', 'edit', 'delete'],
-        ]);
-    }
-
-    public function create()
-    {
-        return view('admin.shared.form', [
-            'title' => 'Nuevo rol',
-            'subtitle' => 'Define un nuevo perfil de acceso',
-            'route' => route('admin.roles.store'),
-            'method' => 'POST',
-            'backRoute' => route('admin.roles.index'),
-            'submitLabel' => 'Guardar rol',
-            'entity' => new Role(),
-            'sections' => $this->formSections(),
         ]);
     }
 
     public function store(RoleRequest $request)
     {
-        $this->roles->create($request->validated());
+        $role = $this->roles->create($request->validated());
+        $role->load(['permissions', 'users']);
+
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'message' => 'Rol creado correctamente.',
+                'role' => [
+                    'id' => $role->id,
+                    'name' => $role->name,
+                    'slug' => $role->slug,
+                    'description' => $role->description,
+                    'is_active' => (bool) $role->is_active,
+                    'permissions_count' => $role->permissions->count(),
+                    'users_count' => $role->users->count(),
+                    'permissions' => $role->permissions->map(function ($permission) {
+                        return [
+                            'id' => $permission->id,
+                            'name' => $permission->name,
+                            'module' => $permission->module,
+                            'label' => $permission->module . ' / ' . $permission->name,
+                        ];
+                    })->values(),
+                ]
+            ], 201);
+        }
 
         return redirect()->route('admin.roles.index')->with('success', 'Rol creado correctamente.');
     }
 
-    public function show(Role $role)
+    public function show(Request $request, Role $role)
     {
-        $role->load(['permissions', 'users']);
-        $role->users_count = $role->users->count();
-        $permissionsHtml = '<ul class="mb-0">';
+        $role->load(['permissions:id,name,module', 'users:id,name']);
 
-        foreach ($role->permissions as $permission) {
-            $permissionsHtml .= '<li>' . e($permission->module . ' / ' . $permission->name) . '</li>';
+        $data = [
+            'id' => $role->id,
+            'name' => $role->name,
+            'slug' => $role->slug,
+            'description' => $role->description,
+            'is_active' => (bool) $role->is_active,
+            'permissions_count' => $role->permissions->count(),
+            'users_count' => $role->users->count(),
+            'permissions' => $role->permissions->map(function ($permission) {
+                return [
+                    'id' => $permission->id,
+                    'name' => $permission->name,
+                    'module' => $permission->module,
+                    'label' => $permission->module . ' / ' . $permission->name,
+                ];
+            })->values(),
+            'permission_ids' => $role->permissions->pluck('id')->values(),
+        ];
+
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'role' => $data
+            ]);
         }
 
-        if ($role->permissions->isEmpty()) {
-            $permissionsHtml .= '<li class="text-muted">Sin permisos asignados</li>';
-        }
-
-        $permissionsHtml .= '</ul>';
-        $role->permissions_list = $permissionsHtml;
-
-        return view('admin.shared.show', [
-            'title' => 'Detalle de rol',
-            'subtitle' => 'Consulta los permisos asignados',
-            'backRoute' => route('admin.roles.index'),
-            'editRoute' => route('admin.roles.edit', $role),
-            'entity' => $role,
-            'sections' => $this->detailSections(),
-        ]);
-    }
-
-    public function edit(Role $role)
-    {
-        $role->load(['permissions']);
-
-        return view('admin.shared.form', [
-            'title' => 'Editar rol',
-            'subtitle' => 'Actualiza el perfil de acceso',
-            'route' => route('admin.roles.update', $role),
-            'method' => 'PUT',
-            'backRoute' => route('admin.roles.index'),
-            'submitLabel' => 'Actualizar rol',
-            'entity' => $role,
-            'sections' => $this->formSections($role),
-        ]);
+        return redirect()->route('admin.roles.index');
     }
 
     public function update(RoleRequest $request, Role $role)
     {
-        if ($role->slug === 'super-admin') {
-            $data = $request->validated();
-            $data['is_active'] = true;
-            $this->roles->update($role, $data);
+        $data = $request->validated();
 
-            return redirect()->route('admin.roles.index')->with('success', 'El rol Super Admin siempre permanece activo.');
+        if ($role->slug === 'super-admin') {
+            $data['is_active'] = true;
         }
 
-        $this->roles->update($role, $request->validated());
+        $this->roles->update($role, $data);
+
+        $role->load(['permissions', 'users']);
+
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'message' => $role->slug === 'super-admin'
+                    ? 'El rol Super Admin siempre permanece activo.'
+                    : 'Rol actualizado correctamente.',
+                'role' => [
+                    'id' => $role->id,
+                    'name' => $role->name,
+                    'slug' => $role->slug,
+                    'description' => $role->description,
+                    'is_active' => (bool) $role->is_active,
+                    'permissions_count' => $role->permissions->count(),
+                    'users_count' => $role->users->count(),
+                    'permissions' => $role->permissions->map(function ($permission) {
+                        return [
+                            'id' => $permission->id,
+                            'name' => $permission->name,
+                            'module' => $permission->module,
+                            'label' => $permission->module . ' / ' . $permission->name,
+                        ];
+                    })->values(),
+                ]
+            ]);
+        }
 
         return redirect()->route('admin.roles.index')->with('success', 'Rol actualizado correctamente.');
     }
 
-    public function destroy(Role $role)
+    public function destroy(Request $request, Role $role)
     {
         if ($role->slug === 'super-admin') {
-            return back()->withErrors(['role' => 'No se puede desactivar el rol Super Admin.']);
+            $message = 'No se puede desactivar el rol Super Admin.';
+
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'message' => $message
+                ], 422);
+            }
+
+            return back()->withErrors(['role' => $message]);
         }
 
         $this->roles->deactivate($role);
 
-        return redirect()->route('admin.roles.index')->with('success', 'Rol desactivado correctamente.');
-    }
-
-    protected function indexColumns()
-    {
-        return [
-            ['label' => 'Nombre', 'field' => 'name', 'type' => 'text'],
-            ['label' => 'Slug', 'field' => 'slug', 'type' => 'text'],
-            ['label' => 'Permisos', 'field' => 'permissions_count', 'type' => 'text'],
-            ['label' => 'Usuarios', 'field' => 'users_count', 'type' => 'text'],
-            ['label' => 'Activo', 'field' => 'is_active', 'type' => 'badge', 'map' => [1 => ['label' => 'Sí', 'class' => 'success'], 0 => ['label' => 'No', 'class' => 'secondary']]],
-        ];
-    }
-
-    protected function formSections($role = null)
-    {
-        $permissions = Permission::orderBy('module')->orderBy('name')->get();
-        $permissionOptions = [];
-
-        foreach ($permissions as $permission) {
-            $permissionOptions[$permission->id] = $permission->module . ' / ' . $permission->name;
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json([
+                'message' => 'Rol desactivado correctamente.'
+            ]);
         }
 
-        $selectedPermissions = $role && $role->relationLoaded('permissions') ? $role->permissions->pluck('id')->all() : [];
-
-        return [
-            [
-                'title' => 'Datos del rol',
-                'fields' => [
-                    ['name' => 'name', 'label' => 'Nombre', 'type' => 'text', 'col' => 6],
-                    ['name' => 'slug', 'label' => 'Slug', 'type' => 'text', 'col' => 6],
-                    ['name' => 'description', 'label' => 'Descripción', 'type' => 'textarea', 'rows' => 4, 'col' => 12],
-                    ['name' => 'is_active', 'label' => 'Rol activo', 'type' => 'checkbox', 'col' => 12, 'value' => 1],
-                    ['name' => 'permissions', 'label' => 'Permisos', 'type' => 'checkbox_group', 'options' => $permissionOptions, 'selected' => $selectedPermissions, 'col' => 12],
-                ],
-            ],
-        ];
-    }
-
-    protected function detailSections()
-    {
-        return [
-            [
-                'title' => 'Información del rol',
-                'fields' => [
-                    ['name' => 'name', 'label' => 'Nombre', 'type' => 'text', 'col' => 6],
-                    ['name' => 'slug', 'label' => 'Slug', 'type' => 'text', 'col' => 6],
-                    ['name' => 'description', 'label' => 'Descripción', 'type' => 'text', 'col' => 12],
-                    ['name' => 'is_active', 'label' => 'Activo', 'type' => 'badge', 'map' => [1 => ['label' => 'Sí', 'class' => 'success'], 0 => ['label' => 'No', 'class' => 'secondary']], 'col' => 6],
-                    ['name' => 'users_count', 'label' => 'Usuarios asignados', 'type' => 'text', 'col' => 6],
-                    ['name' => 'permissions_list', 'label' => 'Permisos', 'type' => 'html', 'col' => 12],
-                ],
-            ],
-        ];
+        return redirect()->route('admin.roles.index')->with('success', 'Rol desactivado correctamente.');
     }
 }

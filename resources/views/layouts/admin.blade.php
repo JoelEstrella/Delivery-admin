@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>nombre app | @yield('page-title')</title>
+    <title>{{ config('app.name', 'Sistema administrativo') }} | @yield('page-title')</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('images/icoSegey.png') }}">
@@ -25,7 +25,7 @@
 
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script> -->
     <script src="{{ asset('js/angular-1.8.2/angular.min.js') }}"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body class="admin-app" ng-controller="@yield('ngController')">
@@ -57,6 +57,51 @@
     <script src="https://unpkg.com/feather-icons"></script>
     <!-- <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js"></script> -->
     <script src="{{ asset('js/admin.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @if(session('success'))
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: 'Éxito',
+            text: @json(session('success')),
+            confirmButtonColor: '#333'
+        });
+    </script>
+    @endif
+
+    @if(session('error'))
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: @json(session('error')),
+            confirmButtonColor: '#333'
+        });
+    </script>
+    @endif
+
+    @if(session('warning'))
+    <script>
+        Swal.fire({
+            icon: 'warning',
+            title: 'Atención',
+            text: @json(session('warning')),
+            confirmButtonColor: '#333'
+        });
+    </script>
+    @endif
+
+    @if($errors->any())
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            html: `{!! collect($errors->all())->map(fn($e) => '<div>'.$e.'</div>')->implode('') !!}`,
+            confirmButtonColor: '#333'
+        });
+    </script>
+    @endif
     @stack('scripts')
 </body>
 

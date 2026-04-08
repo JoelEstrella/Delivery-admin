@@ -1,8 +1,5 @@
 (function ($) {
 
-    console.log("AQUI ESTAMOS");
-    
-
     var spanishDataTable = {
         processing: 'Procesando...',
         search: 'Buscar:',

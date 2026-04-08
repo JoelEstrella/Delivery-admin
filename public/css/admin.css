@@ -401,9 +401,9 @@ body.sidebar-collapsed .admin-main {
 
 .btn-primary,
 .ui-btn--primary {
-    background: linear-gradient(180deg, #c2995c 0%, #b88949 100%);
-    color: var(--color-dark);
-    box-shadow: 0 10px 24px rgba(194, 153, 92, 0.22);
+     background:  #C2995C;
+    color: var(--color-border);
+
     border: 1px solid #b88949;
     transition: box-shadow .2s ease, transform .2s ease, filter .2s ease;
 }
@@ -411,7 +411,7 @@ body.sidebar-collapsed .admin-main {
 .btn-primary:hover,
 .ui-btn--primary:hover {
     background: linear-gradient(180deg, #d2af78 0%, #c08f4e 100%);
-    color: var(--color-dark);
+    color: var(--color-border);
     border-color: #c08f4e;
     filter: brightness(1.02);
 }

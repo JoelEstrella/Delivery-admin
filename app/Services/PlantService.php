@@ -44,12 +44,12 @@ class PlantService
         return $plant->load('images');
     }
 
-    public function update(Plant $plant, array $data, array $images = [], $primaryImageIndex = null)
+public function update(Plant $plant, array $data, array $images = [], $primaryImageIndex = null, array $removedImageIds = [])
     {
         $oldValues = $plant->toArray();
         $data = $this->normalize($data, $plant->id);
         $plant = $this->plants->update($plant, $data);
-
+        $this->removeImages($plant, $removedImageIds);
         $this->storeImages($plant, $images, $primaryImageIndex);
 
         $this->activityLogs->log('plants', 'update', 'Se actualizó la planta ' . $plant->name, $plant->id, $oldValues, $plant->toArray());
@@ -66,6 +66,47 @@ class PlantService
 
         return true;
     }
+
+    protected function removeImages(Plant $plant, array $removedImageIds = [])
+{
+    $removedImageIds = array_filter(array_map('intval', $removedImageIds));
+
+    if (empty($removedImageIds)) {
+        return;
+    }
+
+    $imagesToDelete = $plant->images()
+        ->whereIn('id', $removedImageIds)
+        ->get();
+
+    if ($imagesToDelete->isEmpty()) {
+        return;
+    }
+
+    $deletedPrimary = false;
+
+    foreach ($imagesToDelete as $image) {
+        if ((bool) $image->is_primary) {
+            $deletedPrimary = true;
+        }
+
+        if (!empty($image->file_path)) {
+            \Storage::disk('public')->delete($image->file_path);
+        }
+
+        $image->delete();
+    }
+
+    if ($deletedPrimary) {
+        $firstImage = $plant->images()->orderBy('sort_order')->first();
+
+        if ($firstImage) {
+            $plant->images()->update(['is_primary' => false]);
+            $firstImage->is_primary = true;
+            $firstImage->save();
+        }
+    }
+}
 
     protected function normalize(array $data, $plantId = null)
     {

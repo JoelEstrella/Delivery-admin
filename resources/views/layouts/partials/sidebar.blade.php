@@ -56,7 +56,7 @@
             @endif
             @if($currentUser && $currentUser->hasPermission('plants.view'))
                 <a href="{{ route('admin.plants.index') }}" class="ui-nav-link sidebar-link {{ request()->routeIs('admin.plants.*') ? 'active' : '' }}">
-                    <i data-feather="leaf" width="18" height="18"></i>
+                    <i data-feather="feather" width="18" height="18"></i>
                     <span>Plantas</span>
                 </a>
             @endif

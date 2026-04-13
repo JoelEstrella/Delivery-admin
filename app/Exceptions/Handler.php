@@ -38,7 +38,7 @@ class Handler extends ExceptionHandler
         ) {
             if ($request->expectsJson()) {
                 return response()->json([
-                    'message' => 'No tienes permiso para acceder a este módulo.'
+                    'message' => $exception->getMessage() ?: 'No tienes permisos para realizar esta acción.'
                 ], 403);
             }
 

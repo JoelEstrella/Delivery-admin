@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\CctRequest;
 use App\Models\Cct;
 use App\Services\CctService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 
 class CctController extends Controller
 {
@@ -23,17 +24,20 @@ class CctController extends Controller
 
     public function index(Request $request)
     {
-        $records = $this->ccts->paginate($request->get('search'));
 
-        return view('admin.shared.index', [
-            'title' => 'CCT',
-            'subtitle' => 'Gestión de centros de trabajo',
-            'createRoute' => route('admin.ccts.create'),
-            'search' => $request->get('search'),
-            'records' => $records,
-            'columns' => $this->indexColumns(),
-            'resource' => 'admin.ccts',
-            'actions' => ['show', 'edit', 'delete'],
+        $users = Cct::all();
+
+
+        if ($request->expectsJson()) {
+            return Response::success(
+                'Registros obtenidos correctamente.',
+                $users
+            );
+        }
+
+        return view('admin.work-centers.index', [
+            'title' => 'Escuelas',
+            'subtitle' => 'Catálogos de Escuelas',
         ]);
     }
 

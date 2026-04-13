@@ -37,7 +37,7 @@ class UserService
 
         $this->activityLogs->log('users', 'create', 'Se creó el usuario ' . $user->name, $user->id, null, $this->cleanValues($user->toArray()));
 
-        return $user;
+        return $user->load('role');
     }
 
     public function update(User $user, array $data)

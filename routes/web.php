@@ -38,7 +38,10 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->n
 Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    Route::put('users/{user}', [UserController::class, 'update']);
     Route::resource('users', UserController::class);
+
+
     Route::resource('roles', RoleController::class);
     Route::resource('ccts', CctController::class);
     Route::resource('plants', PlantController::class);

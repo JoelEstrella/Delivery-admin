@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
 
 class UserController extends Controller
 {
@@ -26,13 +27,13 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $users = User::with('role')->orderBy('name')->get();
-        $roles = Role::orderBy('name')->get(['id', 'name']);
+
 
         if ($request->expectsJson()) {
-            return response()->json([
-                'users' => $users,
-                'roles' => $roles,
-            ]);
+            return Response::success(
+                'Registros obtenidos correctamente.',
+                $users
+            );
         }
 
         return view('admin.users.index', [
@@ -43,71 +44,73 @@ class UserController extends Controller
 
     public function create()
     {
-        return view('admin.shared.form', [
-            'title' => 'Nuevo usuario',
-            'subtitle' => 'Captura la información del usuario',
-            'route' => route('admin.users.store'),
-            'method' => 'POST',
-            'backRoute' => route('admin.users.index'),
-            'submitLabel' => 'Guardar usuario',
-            'entity' => new User(),
-            'sections' => $this->formSections(),
-        ]);
+        return Response::success(
+            'Registros obtenidos correctamente.',
+            [
+                'title' => 'Usuarios',
+                'subtitle' => 'Crear Usuario',
+                'method' => 'POST',
+                'submitLabel' => 'Guardar usuario',
+                'roles' => Role::orderBy('name')->get(['id', 'name'])
+            ]
+        );
     }
 
     public function store(UserRequest $request)
     {
+        
         $user = $this->users->create($request->validated());
 
         if ($request->expectsJson()) {
-            return response()->json([
-                'message' => 'Usuario creado correctamente.',
-                'user' => $user,
-            ], 201);
+            return Response::success(
+                'Registro creado correctamente.',
+                $user,
+                201
+            );
         }
-
-        return redirect()->route('admin.users.index')->with('success', 'Usuario creado correctamente.');
     }
 
     public function show(User $user)
     {
         $user->load(['role.permissions']);
 
-        return view('admin.shared.show', [
-            'title' => 'Detalle de usuario',
-            'subtitle' => 'Consulta la información del usuario',
-            'backRoute' => route('admin.users.index'),
-            'editRoute' => route('admin.users.edit', $user),
-            'entity' => $user,
-            'sections' => $this->detailSections(),
-        ]);
+        return Response::success(
+            'Registros obtenidos correctamente.',
+            $user
+        );
     }
 
     public function edit(User $user)
     {
         $user->load(['role.permissions']);
 
-        return view('admin.shared.form', [
-            'title' => 'Editar usuario',
-            'subtitle' => 'Actualiza la información del usuario',
-            'route' => route('admin.users.update', $user),
-            'method' => 'PUT',
-            'backRoute' => route('admin.users.index'),
-            'submitLabel' => 'Actualizar usuario',
-            'entity' => $user,
-            'sections' => $this->formSections($user),
-        ]);
+        return Response::success(
+            'Registros obtenidos correctamente.',
+            [
+                'title' => 'Usuarios',
+                'subtitle' => 'Editar Usuario',
+                'method' => 'PUT',
+                'submitLabel' => 'Actualizar usuario',
+                'user' => $user,
+                'roles' => Role::orderBy('name')->get(['id', 'name'])
+            ]
+        );
     }
 
     public function update(UserRequest $request, User $user)
     {
+
         if (Auth::id() === $user->id && !$request->boolean('is_active')) {
-            return back()->withInput()->withErrors(['is_active' => 'No puedes desactivar tu propio usuario.']);
+            abort(403, 'No puedes desactivar tu propio usuario.');
         }
 
-        $this->users->update($user, $request->validated());
+        $userUpdate = $this->users->update($user, $request->validated());
 
-        return redirect()->route('admin.users.index')->with('success', 'Usuario actualizado correctamente.');
+        return Response::success(
+            'Registros actualizados correctamente.',
+            $userUpdate
+        );
+
     }
 
     public function destroy(User $user)

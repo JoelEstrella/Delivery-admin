@@ -1,8 +1,8 @@
 @extends('layouts.admin')
 
-@section('page-title', 'Usuarios')
-@section('ngApp', 'users')
-@section('ngController', 'users')
+@section('page-title', 'Escuelas')
+@section('ngApp', 'work-centers')
+@section('ngController', 'work-centers')
 
 @section('content')
 <div ng-init="getList()" ng-cloak>
@@ -13,23 +13,26 @@
                 <div class="ui-page-title">{{ $title }}</div>
                 <div class="ui-page-subtitle">{{ $subtitle }}</div>
             </div>
-            <button type="button" class="ui-btn ui-btn--primary" ng-click="create()">
+            <!-- <button type="button" class="ui-btn ui-btn--primary" ng-click="create()">
                 Crear
-            </button>
+            </button> -->
         </div>
     </div>
 
     <div class="card-admin ui-card p-4">
         <div class="table-responsive" style="overflow-x: auto">
-            <table class="table ui-table align-middle mb-0" >
+            <table class="table ui-table align-middle mb-0">
                 <thead>
                     <tr>
+                        <th>Clave CCT</th>
                         <th>Nombre</th>
-                        <th>Usuario</th>
+                        <th>Tipo</th>
+                        <th>Localidad</th>
+                        <th>Municipio</th>
+                        <th>Director</th>
                         <th>Correo</th>
-                        <th>Rol</th>
                         <th>Estado</th>
-                        <th>Opciones</th>
+                        <!-- <th>Opciones</th> -->
                     </tr>
                 </thead>
                 <tbody>
@@ -47,21 +50,24 @@
 
                     <tr dir-paginate="item in items | itemsPerPage:pageSize" current-page="currentPage"
                         pagination-id="itemsPagination">
-                        <td>@{{ item.name }}</td>
-                        <td>@{{ item.username || '—' }}</td>
-                        <td>@{{ item.email }}</td>
-                        <td>@{{ item.role ? item.role.name : '—' }}</td>
+                        <td>@{{ item.CLAVECCT }}</td>
+                        <td>@{{ item.NOMBRECT }}</td>
+                        <td>@{{ item.TIPO }}</td>
+                        <td>@{{ item.LOCALIDAD }} @{{ item.N_LOCALIDAD }}</td>
+                        <td>@{{ item.MUNICIPIO }} @{{ item.N_MUNICIPIO }}</td>
+                        <td>@{{ item.DIRECTOR }}</td>
+                        <td>@{{ item.CORREOELE }}</td>
                         <td>
                             <span class="ui-badge ui-badge--soft badge"
-                                ng-class="item.is_active ? 'bg-success' : 'bg-secondary'">
-                                @{{ item.is_active ? 'Activo' : 'Inactivo' }}
+                                ng-class="item.STATUS ? 'bg-success' : 'bg-secondary'">
+                                @{{ item.STATUS ? 'Activo' : 'Inactivo' }}
                             </span>
                         </td>
-                        <td>
+                        <!-- <td>
                             <button class="btn btn-sm btn-primary" ng-click="edit(item)">
                                 Editar
                             </button>
-                        </td>
+                        </td> -->
                     </tr>
                 </tbody>
             </table>
@@ -98,7 +104,7 @@
 
                         <div class="row g-3">
 
-                    
+
                             <div class="col-12 col-md-6">
                                 <label class="form-label">Nombre</label>
                                 <input type="text" name="name" class="form-control" ng-model="newItem.name" required
@@ -106,7 +112,6 @@
                    'is-invalid': createForm.name.$touched && createForm.name.$invalid,
                    'is-valid': createForm.name.$touched && createForm.name.$valid
                }">
-
                                 <small class="text-danger"
                                     ng-show="createForm.name.$touched && createForm.name.$invalid">
                                     <span ng-show="createForm.name.$error.required">El nombre es obligatorio</span>
@@ -114,7 +119,6 @@
                                 </small>
                             </div>
 
-          
                             <div class="col-12 col-md-6">
                                 <label class="form-label">Correo</label>
                                 <input type="email" name="email" class="form-control" ng-model="newItem.email" required
@@ -131,56 +135,58 @@
                             </div>
 
                             <div class="col-12 col-md-6">
-                                <label class="form-label">Usuario</label>
-                                <input type="text" name="username" class="form-control" ng-model="newItem.username"
-                                    ng-minlength="4" required ng-class="{
-                   'is-invalid': createForm.username.$touched && createForm.username.$invalid,
-                   'is-valid': createForm.username.$touched && createForm.username.$valid
+                                <label class="form-label">Usuario Respondable</label>
+                                <input type="text" name="responsible_name" class="form-control"
+                                    ng-model="newItem.responsible_name" ng-minlength="4" required ng-class="{
+                   'is-invalid': createForm.responsible_name.$touched && createForm.responsible_name.$invalid,
+                   'is-valid': createForm.responsible_name.$touched && createForm.responsible_name.$valid
                }">
 
                                 <small class="text-danger"
-                                    ng-show="createForm.username.$touched && createForm.username.$invalid">
-                                    <span ng-show="createForm.username.$error.required">El Usuario es
+                                    ng-show="createForm.responsible_name.$touched && createForm.responsible_name.$invalid">
+                                    <span ng-show="createForm.responsible_name.$error.required">El Usuario es
                                         obligatorio</span>
-                                    <span ng-show="createForm.username.$error.minlength">Mínimo 4 caracteres</span>
+                                    <span ng-show="createForm.responsible_name.$error.minlength">Mínimo 4
+                                        caracteres</span>
                                 </small>
                             </div>
 
-                            
                             <div class="col-12 col-md-6">
-                                <label class="form-label">Rol</label>
-                                <select name="role" class="form-select" ng-model="newItem.role_id"
-                                    ng-options="role.id as role.name for role in roles" required ng-class="{
-                    'is-invalid': createForm.role.$touched && createForm.role.$invalid,
-                    'is-valid': createForm.role.$touched && createForm.role.$valid
-                }">
-                                    <option value="">Selecciona un rol</option>
-                                </select>
-
-                                <small class="text-danger"
-                                    ng-show="createForm.role.$touched && createForm.role.$invalid">
-                                    El rol es obligatorio
-                                </small>
-                            </div>
-
-                           
-                            <div class="col-12 col-md-6">
-                                <label class="form-label">Contraseña</label>
-                                <input type="password" name="password" class="form-control" ng-model="newItem.password"
-                                    required ng-minlength="8" ng-class="{
-                   'is-invalid': createForm.password.$touched && createForm.password.$invalid,
-                   'is-valid': createForm.password.$touched && createForm.password.$valid
+                                <label class="form-label">Número</label>
+                                <input type="text" name="phone" class="form-control" ng-model="newItem.phone"
+                                    ng-minlength="4" required ng-class="{
+                   'is-invalid': createForm.phone.$touched && createForm.phone.$invalid,
+                   'is-valid': createForm.phone.$touched && createForm.phone.$valid
                }">
 
                                 <small class="text-danger"
-                                    ng-show="createForm.password.$touched && createForm.password.$invalid">
-                                    <span ng-show="createForm.password.$error.required">La contraseña es
-                                        obligatoria</span>
-                                    <span ng-show="createForm.password.$error.minlength">Mínimo 8 caracteres</span>
+                                    ng-show="createForm.phone.$touched && createForm.phone.$invalid">
+                                    <span ng-show="createForm.phone.$error.required">El Telefono es
+                                        obligatorio</span>
+                                    <span ng-show="createForm.phone.$error.minlength">10
+                                        caracteres</span>
                                 </small>
                             </div>
 
-                           
+                            <div class="col-12 col-md-6">
+                                <label class="form-label">Dirección</label>
+                                <input type="text" name="address" class="form-control" ng-model="newItem.address"
+                                    ng-minlength="4" required ng-class="{
+                   'is-invalid': createForm.address.$touched && createForm.address.$invalid,
+                   'is-valid': createForm.address.$touched && createForm.address.$valid
+               }">
+
+                                <small class="text-danger"
+                                    ng-show="createForm.address.$touched && createForm.address.$invalid">
+                                    <span ng-show="createForm.address.$error.required">La ubicación es
+                                        obligatorio</span>
+                                    <span ng-show="createForm.address.$error.minlength">3
+                                        caracteres</span>
+                                </small>
+                            </div>
+
+
+
                             <div class="col-12 col-md-6 d-flex align-items-end">
                                 <label class="form-check form-switch m-0 d-flex align-items-center gap-2">
                                     <input type="checkbox" class="form-check-input m-0" ng-model="newItem.is_active">
@@ -239,8 +245,7 @@
                    'is-valid': editForm.name.$touched && editForm.name.$valid
                }">
 
-                                <small class="text-danger"
-                                    ng-show="editForm.name.$touched && editForm.name.$invalid">
+                                <small class="text-danger" ng-show="editForm.name.$touched && editForm.name.$invalid">
                                     <span ng-show="editForm.name.$error.required">El nombre es obligatorio</span>
                                     <span ng-show="editForm.name.$error.minlength">Mínimo 3 caracteres</span>
                                 </small>
@@ -255,8 +260,7 @@
                    'is-valid': editForm.email.$touched && editForm.email.$valid
                }">
 
-                                <small class="text-danger"
-                                    ng-show="editForm.email.$touched && editForm.email.$invalid">
+                                <small class="text-danger" ng-show="editForm.email.$touched && editForm.email.$invalid">
                                     <span ng-show="editForm.email.$error.required">El correo es obligatorio</span>
                                     <span ng-show="editForm.email.$error.email">Formato inválido</span>
                                 </small>
@@ -264,54 +268,57 @@
 
                             <!-- Usuario -->
                             <div class="col-12 col-md-6">
-                                <label class="form-label">Usuario</label>
-                                <input type="text" name="username" class="form-control" ng-model="formData.username"
-                                    ng-minlength="4" required ng-class="{
-                   'is-invalid': editForm.username.$touched && editForm.username.$invalid,
-                   'is-valid': editForm.username.$touched && editForm.username.$valid
+                                <label class="form-label">Usuario Responsable</label>
+                                <input type="text" name="responsible_name" class="form-control"
+                                    ng-model="formData.responsible_name" ng-minlength="4" required ng-class="{
+                   'is-invalid': editForm.responsible_name.$touched && editForm.responsible_name.$invalid,
+                   'is-valid': editForm.responsible_name.$touched && editForm.responsible_name.$valid
                }">
 
                                 <small class="text-danger"
-                                    ng-show="editForm.username.$touched && editForm.username.$invalid">
-                                    <span ng-show="editForm.username.$error.required">El Usuario es
+                                    ng-show="editForm.responsible_name.$touched && editForm.responsible_name.$invalid">
+                                    <span ng-show="editForm.responsible_name.$error.required">El Usuario es
                                         obligatorio</span>
-                                    <span ng-show="editForm.username.$error.minlength">Mínimo 4 caracteres</span>
+                                    <span ng-show="editForm.responsible_name.$error.minlength">Mínimo 4
+                                        caracteres</span>
                                 </small>
                             </div>
 
-                            <!-- Rol -->
                             <div class="col-12 col-md-6">
-                                <label class="form-label">Rol</label>
-                                <select name="role" class="form-select" ng-model="formData.role_id"
-                                    ng-options="role.id as role.name for role in roles" required ng-class="{
-                    'is-invalid': editForm.role.$touched && editForm.role.$invalid,
-                    'is-valid': editForm.role.$touched && editForm.role.$valid
-                }">
-                                    <option value="">Selecciona un rol</option>
-                                </select>
+                                <label class="form-label">Número</label>
+                                <input type="text" name="phone" class="form-control" ng-model="formData.phone"
+                                    ng-minlength="4" required ng-class="{
+                   'is-invalid': editForm.phone.$touched && editForm.phone.$invalid,
+                   'is-valid': editForm.phone.$touched && editForm.phone.$valid
+               }">
 
-                                <small class="text-danger"
-                                    ng-show="editForm.role.$touched && editForm.role.$invalid">
-                                    El rol es obligatorio
+                                <small class="text-danger" ng-show="editForm.phone.$touched && editForm.phone.$invalid">
+                                    <span ng-show="editForm.phone.$error.required">El Telefono es
+                                        obligatorio</span>
+                                    <span ng-show="editForm.phone.$error.minlength">10
+                                        caracteres</span>
                                 </small>
                             </div>
 
-                            <!-- Contraseña -->
                             <div class="col-12 col-md-6">
-                                <label class="form-label">Nueva Contraseña</label>
-                                <input type="password" name="password" class="form-control" ng-model="formData.password"
-                                     ng-minlength="8" ng-class="{
-                   'is-invalid': editForm.password.$touched && editForm.password.$invalid,
-                   'is-valid': editForm.password.$touched && editForm.password.$valid
+                                <label class="form-label">Dirección</label>
+                                <input type="text" name="address" class="form-control" ng-model="formData.address"
+                                    ng-minlength="4" required ng-class="{
+                   'is-invalid': editForm.address.$touched && editForm.address.$invalid,
+                   'is-valid': editForm.address.$touched && editForm.address.$valid
                }">
 
                                 <small class="text-danger"
-                                    ng-show="editForm.password.$touched && editForm.password.$invalid">
-                                    <span ng-show="editForm.password.$error.required">La contraseña es
-                                        obligatoria</span>
-                                    <span ng-show="editForm.password.$error.minlength">Mínimo 8 caracteres</span>
+                                    ng-show="editForm.address.$touched && editForm.address.$invalid">
+                                    <span ng-show="editForm.address.$error.required">La ubicación es
+                                        obligatorio</span>
+                                    <span ng-show="editForm.address.$error.minlength">3
+                                        caracteres</span>
                                 </small>
                             </div>
+
+
+
 
                             <!-- Activo -->
                             <div class="col-12 col-md-6 d-flex align-items-end">
@@ -346,5 +353,5 @@
 @endsection
 
 @push('scripts')
-<script src="{{ asset('js/users.js') }}"></script>
+<script src="{{ asset('js/work-centers.js') }}"></script>
 @endpush

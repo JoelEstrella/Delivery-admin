@@ -28,7 +28,7 @@ class DeliveryController extends Controller
     {
         $records = $this->deliveries->paginate($request->get('search'));
 
-        return view('admin.shared.index', [
+        return view('admin.deliveries.index', [
             'title' => 'Entregas',
             'subtitle' => 'Registro de entrega de plantas a CCT',
             'createRoute' => route('admin.deliveries.create'),

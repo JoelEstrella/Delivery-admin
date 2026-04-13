@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\DirectionRequest;
 use App\Models\Direction;
 use App\Services\DirectionService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 
 class DirectionController extends Controller
 {
@@ -23,76 +24,80 @@ class DirectionController extends Controller
 
     public function index(Request $request)
     {
-        $records = $this->directions->paginate($request->get('search'));
+        $records = Direction::all();
 
-        return view('admin.shared.index', [
+        if ($request->expectsJson()) {
+            return Response::success(
+                'Registros obtenidos correctamente.',
+                $records
+            );
+        }
+
+        return view('admin.organizations.index', [
             'title' => 'Direcciones',
-            'subtitle' => 'Unidades receptoras de stock',
-            'createRoute' => route('admin.directions.create'),
-            'search' => $request->get('search'),
-            'records' => $records,
-            'columns' => $this->indexColumns(),
-            'resource' => 'admin.directions',
-            'actions' => ['show', 'edit', 'delete'],
+            'subtitle' => 'Catálogo de Direcciones y Departamentos'
         ]);
     }
 
     public function create()
     {
-        return view('admin.shared.form', [
-            'title' => 'Nueva dirección',
-            'subtitle' => 'Registra una dirección operativa',
-            'route' => route('admin.directions.store'),
-            'method' => 'POST',
-            'backRoute' => route('admin.directions.index'),
-            'submitLabel' => 'Guardar dirección',
-            'entity' => new Direction(),
-            'sections' => $this->formSections(),
-        ]);
+        return Response::success(
+            'Registros obtenidos correctamente.',
+            [
+                'title' => 'Direcciones',
+                'subtitle' => 'Crear Dirección',
+                'method' => 'POST',
+                'submitLabel' => 'Guardar Dirección'
+            ]
+        );
     }
 
     public function store(DirectionRequest $request)
     {
-        $this->directions->create($request->validated());
+        $direction = $this->directions->create($request->validated());
 
-        return redirect()->route('admin.directions.index')->with('success', 'Dirección creada correctamente.');
+        if ($request->expectsJson()) {
+            return Response::success(
+                'Registro creado correctamente.',
+                $direction,
+                201
+            );
+        }
     }
 
     public function show(Direction $direction)
     {
         $direction->load('stocks.plant');
 
-        return view('admin.shared.show', [
-            'title' => 'Detalle de dirección',
-            'subtitle' => 'Consulta la ficha de la dirección',
-            'backRoute' => route('admin.directions.index'),
-            'editRoute' => route('admin.directions.edit', $direction),
-            'entity' => $direction,
-            'sections' => $this->detailSections(),
-            'extraView' => 'admin.directions.partials.stocks',
-            'extraData' => ['direction' => $direction],
-        ]);
+        return Response::success(
+            'Registros obtenidos correctamente.',
+            $direction
+        );
     }
 
     public function edit(Direction $direction)
     {
-        return view('admin.shared.form', [
-            'title' => 'Editar dirección',
-            'subtitle' => 'Actualiza la dirección operativa',
-            'route' => route('admin.directions.update', $direction),
-            'method' => 'PUT',
-            'backRoute' => route('admin.directions.index'),
-            'submitLabel' => 'Actualizar dirección',
-            'entity' => $direction,
-            'sections' => $this->formSections($direction),
-        ]);
+        return Response::success(
+            'Registros obtenidos correctamente.',
+            [
+                'title' => 'Direcciones',
+                'subtitle' => 'Editar Dirección',
+                'method' => 'PUT',
+                'submitLabel' => 'Actualizar Dirección',
+                'direction' => $direction
+            ]
+        );
     }
 
     public function update(DirectionRequest $request, Direction $direction)
     {
-        $this->directions->update($direction, $request->validated());
 
-        return redirect()->route('admin.directions.index')->with('success', 'Dirección actualizada correctamente.');
+        $directionUpdate = $this->directions->update($direction, $request->validated());
+
+        return Response::success(
+            'Registros actualizados correctamente.',
+            $directionUpdate
+        );
     }
 
     public function destroy(Direction $direction)

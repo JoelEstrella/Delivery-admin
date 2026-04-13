@@ -1,9 +1,8 @@
-var app = angular.module('users', ['angularUtils.directives.dirPagination']);
+var app = angular.module('work-centers', ['angularUtils.directives.dirPagination']);
 
-app.controller('users', function ($http, $scope) {
+app.controller('work-centers', function ($http, $scope) {
 
     $scope.items = [];
-    $scope.roles = [];
     $scope.saving = false;
     $scope.loading = false;
 
@@ -17,7 +16,7 @@ app.controller('users', function ($http, $scope) {
     $scope.pageSize = 10;
 
     const moduleTitle = title.users;
-    const url = 'users';
+    const url = 'ccts';
 
     // Listar Registros
     $scope.getList = () => {
@@ -55,12 +54,11 @@ app.controller('users', function ($http, $scope) {
 
                 const data = response.data.data
 
-                const { title, subtitle, submitLabel, roles } = data;
+                const { title, subtitle, submitLabel } = data;
 
                 $scope.title = title;
                 $scope.subtitle = subtitle;
                 $scope.submitLabel = submitLabel;
-                $scope.roles = roles;
 
                 openCreateModal();
             },
@@ -127,13 +125,12 @@ app.controller('users', function ($http, $scope) {
 
                 const data = response.data.data
 
-                const { title, subtitle, submitLabel, roles, user } = data;
+                const { title, subtitle, submitLabel, direction } = data;
 
                 $scope.title = title;
                 $scope.subtitle = subtitle;
                 $scope.submitLabel = submitLabel;
-                $scope.roles = roles;
-                $scope.formData = angular.copy(user);
+                $scope.formData = angular.copy(direction);
 
                 console.log($scope.formData);
 
@@ -174,7 +171,7 @@ app.controller('users', function ($http, $scope) {
             function (response) {
                 console.log("exitoso:", response);
                 const { data, message } = response.data;
-                
+
                 const item = $scope.items.find(item => item.id === data.id);
 
                 if (item) {
